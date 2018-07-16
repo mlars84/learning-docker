@@ -3,6 +3,7 @@
 - [Commands](#commands)
 - [Containers](#containers)
 - [Share an image](#share-an-image)
+- [Services](#services)
 - [Resources used](#resources-used)
 
 ## Commands
@@ -27,11 +28,14 @@
     - `docker container ls -aq`
 
 ## Containers
-- Containers are the bottom of the hierarchy of an app. Above that is a service, defines how containers behave in production. Top level is a stack, defines interactions of all services:
+- Containers are the bottom of the hierarchy of an app. Above that is a service, 
+- defines how containers behave in production. Top level is a stack, defines 
+- interactions of all services:
     - STACK
     - SERVICES
     - CONTAINER
-- Portable images (`Dockerfile`) ensure that your app, dependencies and runtime all travel together.
+- Portable images (`Dockerfile`) ensure that your app, dependencies and runtime 
+all travel together.
 - `Dockerfile` defines what goes on in the environment inside your container. 
 - Create `Dockerfile`, run `docker build -t <NAME> .` in directory. 
 - `docker image ls` should show new Repository.
@@ -60,6 +64,30 @@ many repo's.
     - `docker push mlars84/docker-python:v1`
 4 - Pull and run from remote repo:
     - `docker run -p 4000:80 username/repository:tag`
+
+## Services
+- Really just containers in production. Runs one image, but it codifies the way
+the image runs--what ports it should use, how many replicas of the container should
+run so the service has the capacity it needs, etc.
+- `docker-compose.yml`
+    - pulls the uploaded image
+    - run 5 instances of that image as a service called web, limiting each one to 
+    use  at most 10% of the CPU (across all cores), and 50MB RAM.
+    - immediately restart containers if one fails
+    - Map port 4000 on the host to web's port 80
+    - instruct web containers to share port 80 via a load-balanced network called   
+    `webnet`
+    - define the `webnet` network with the default settings
+- `docker swarm init`
+- `docker stack deploy -c docker-compose.yml <APP_NAME>`
+- `docker service ls`
+- A single container running in a service is called a `task`.
+- `Tasks` have unique id's that numerically increment up to the number of replicas.
+- `docker service ps dockerPython_web` to view all replica `tasks`
+- OR: `docker container ls -q` to list task id's 
+- Scale the app by changing the replicas value and re-running `docker stack deploy`
+- Take app/stack down: `docker stack rm <APP_NAME>`
+- Take down swarm: `docker swarm leave --force`
 
 ## Resources used
 - [Docker docs](https://docs.docker.com/get-started/)
