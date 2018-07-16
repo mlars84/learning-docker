@@ -4,6 +4,7 @@
 - [Containers](#containers)
 - [Share an image](#share-an-image)
 - [Services](#services)
+- [Swarms](#swarms)
 - [Resources used](#resources-used)
 
 ## Commands
@@ -88,6 +89,32 @@ run so the service has the capacity it needs, etc.
 - Scale the app by changing the replicas value and re-running `docker stack deploy`
 - Take app/stack down: `docker stack rm <APP_NAME>`
 - Take down swarm: `docker swarm leave --force`
+
+## Swarms
+- group of machines running docker and joined in a "cluster".
+- continue to run normal docker commands, but now they are executed on a 
+cluster by a swarm manager.
+- Can be physical or virtual. After joining swarms, they are called nodes.
+- `docker swarm init`
+- Create VMs:
+    - `docker-machine create --driver virtualbox <VM_NAME>` X 2
+- The first machine acts as the manager, executes commands and auths workers to
+join the swarm. The second is the worker.
+- `docker-machine ssh` to send commands to VMs.
+- `docker-machine ssh myvm1 "docker swarm init --advertise-addr <myvm1 ip:2377>"`
+- Make sure to use `2377` for `docker swarm init` AND `docker swarm join`
+- Use command that is returned to join a worker to the manager.
+- `docker node ls` on manager to view nodes
+-  `docker-machine env <VM_MANAGER>` to config docker-machine shell env variables.
+-  `docker stack deploy -c docker-compose.yml <APP_NAME>` to deploy on swarm manager.
+-  `docker stack ps <APP_NAME>` to view swarm distribution.
+-  `<VM_IP:port>` in browser to access app: `http://192.168.99.100:4000/`
+-  `docker stack rm <APP_NAME>` to teardown.
+-  `docker-machine start <machine-name>` to restart a machine
+-  `eval $(docker-machine env -u)` to unset the env variables.
+-  `docker-machine ssh myvm2 "docker swarm leave"` to remove worker.
+-  `docker-machine ssh myvm1 "docker swarm leave --force"` to remove manager.
+-  
 
 ## Resources used
 - [Docker docs](https://docs.docker.com/get-started/)

@@ -3,7 +3,7 @@ services:
   web:
     image: mlars84/docker-python:v1
     deploy:
-      replicas: 10
+      replicas: 5
       resources:
         limits:
           cpus: "0.1"
