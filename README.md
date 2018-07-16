@@ -1,13 +1,14 @@
 ## Learning Docker
 - [Learning Docker](#learning-docker)
-- [Commands](#commands)
+- [Basic Commands](#basic-commands)
 - [Containers](#containers)
 - [Share an image](#share-an-image)
 - [Services](#services)
 - [Swarms](#swarms)
+- [Stacks](#stacks)
 - [Resources used](#resources-used)
 
-## Commands
+## Basic Commands
 - List Docker CLI commands
     - `docker`
     - `docker container --help`
@@ -108,13 +109,24 @@ join the swarm. The second is the worker.
 -  `docker-machine env <VM_MANAGER>` to config docker-machine shell env variables.
 -  `docker stack deploy -c docker-compose.yml <APP_NAME>` to deploy on swarm manager.
 -  `docker stack ps <APP_NAME>` to view swarm distribution.
--  `<VM_IP:port>` in browser to access app: `http://192.168.99.100:4000/`
+-  `<VM_IP:port>` in browser to access app: `http://192.168.99.100:8080/`
 -  `docker stack rm <APP_NAME>` to teardown.
 -  `docker-machine start <machine-name>` to restart a machine
 -  `eval $(docker-machine env -u)` to unset the env variables.
 -  `docker-machine ssh myvm2 "docker swarm leave"` to remove worker.
 -  `docker-machine ssh myvm1 "docker swarm leave --force"` to remove manager.
--  
+
+## Stacks
+- A group of interrelated services that share dependencies, and can be orchestrated
+and scaled together.
+- single stack is capable of defining and coordinating the functionality of an
+entire application (for larger/more complex, can have multiple stacks).
+- Add a service in the docker-compose.yml: `dockersamples/visualizer:stable`
+- Make sure shell is configured to myvm1 (env config)
+- Run `docker stack deploy -c docker-compose.yml dockerPython` to re-deploy and add
+new service in.
+- open in browser: `http://192.168.99.100:8080/` OR check with `docker stack ps dockerPython`
+- 
 
 ## Resources used
 - [Docker docs](https://docs.docker.com/get-started/)
